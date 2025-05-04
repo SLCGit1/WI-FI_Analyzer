@@ -1,4 +1,4 @@
-# 💻 WiFi Analyzer Code - Technical Breakdown
+# 💻 WiFi Analyzer - Technical Breakdown
 
 ## What This Code Does
 
