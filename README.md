@@ -11,6 +11,7 @@ Key functionality includes:
 - **Channel Congestion Analysis**: A sophisticated algorithm models how WiFi signals overlap and interfere with each other, calculating congestion scores for each channel.
 - **Performance Testing**: The code performs network speed tests, measuring both download throughput and latency Line 302 has an option for failed over DNS, for Org that block public DNS.
 - **Report Generation**: Compiles all findings into a comprehensive report that can be saved and shared.
+- **Location Tracking**: Enhanced with Building and Room Number fields to help IT support locate and address WiFi issues more efficiently.
 
 The application presents this information through a user-friendly graphical interface using Windows Forms technology, with color coding and clear visual indicators to help users understand their WiFi environment at a glance.
 
@@ -25,6 +26,7 @@ The application presents this information through a user-friendly graphical inte
 - [📄 Report Generation](#-report-generation)
 - [🔄 Event Handlers](#-event-handlers)
 - [⚙️ Advanced Implementation Details](#-advanced-implementation-details)
+- [🏢 Location Tracking Enhancement](#-location-tracking-enhancement)
 
 ## 🖥️ GUI Components
 
@@ -511,20 +513,20 @@ This function:
 - Returns a standardized label and appropriate color
 - Uses pattern matching to handle variations in security naming
 
-## 📄 Report Generation
+## 🏢 Location Tracking Enhancement
 
-### Show-ExportInfoForm Function
+### Enhanced User Information Form
 
 ```powershell
 function Show-ExportInfoForm {
     # Create form dialog
     $form = New-Object System.Windows.Forms.Form
     $form.Text = "Export Info"
-    $form.Size = New-Object System.Drawing.Size(400, 280)
+    $form.Size = New-Object System.Drawing.Size(400, 360) # Increased height for new fields
     $form.StartPosition = "CenterScreen"
 
-    # Define form fields
-    $labels = @("Your Name:", "ID Number:", "Email Address:", "Telephone Number:")
+    # Define form fields - UPDATED to include Building and Room Number
+    $labels = @("Your Name:", "ID Number:", "Email Address:", "Telephone Number:", "Building:", "Room Number:")
     $textboxes = @()
 
     # Create controls dynamically
@@ -544,10 +546,10 @@ function Show-ExportInfoForm {
         $textboxes += $textbox
     }
 
-    # OK button
+    # OK button - UPDATED position to accommodate new fields
     $okButton = New-Object System.Windows.Forms.Button
     $okButton.Text = "OK"
-    $okButton.Location = New-Object System.Drawing.Point -ArgumentList 150, 190
+    $okButton.Location = New-Object System.Drawing.Point -ArgumentList 150, 270
     $okButton.Size = New-Object System.Drawing.Size(100, 30)
     $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
     $form.AcceptButton = $okButton
@@ -555,11 +557,14 @@ function Show-ExportInfoForm {
 
     # Show dialog and process result
     if ($form.ShowDialog() -eq "OK") {
+        # Return data structure UPDATED to include Building and Room Number
         return @{
             Name = $textboxes[0].Text
             ID = $textboxes[1].Text
             Email = $textboxes[2].Text
             Phone = $textboxes[3].Text
+            Building = $textboxes[4].Text
+            RoomNumber = $textboxes[5].Text
         }
     } else {
         return $null
@@ -567,13 +572,7 @@ function Show-ExportInfoForm {
 }
 ```
 
-This function:
-- Creates a modal dialog form for user input
-- Dynamically generates form fields
-- Returns collected data as a hashtable
-- Handles dialog cancellation by returning null
-
-### Export-Report Function
+### Enhanced Report Generation
 
 ```powershell
 function Export-Report($networks, $mac, $recommendedChannels, $computerName, $ipAddress, $userInfo, $connectedSSID, $connectedBSSID, $speedTest, $congestionData) {
@@ -586,12 +585,68 @@ function Export-Report($networks, $mac, $recommendedChannels, $computerName, $ip
     $report += "Wi-Fi Analysis Report"
     $report += ("=" * 25)
     
-    # User information section
+    # User information section - UPDATED to include Building and Room Number
     $report += "Submitted By:"
-    $report += "Name       : $($userInfo.Name)"
-    $report += "ID Number  : $($userInfo.ID)"
-    $report += "Email      : $($userInfo.Email)"
-    $report += "Telephone  : $($userInfo.Phone)"
+    $report += "Name         : $($userInfo.Name)"
+    $report += "ID Number    : $($userInfo.ID)"
+    $report += "Email        : $($userInfo.Email)"
+    $report += "Telephone    : $($userInfo.Phone)"
+    $report += "Building     : $($userInfo.Building)"
+    $report += "Room Number  : $($userInfo.RoomNumber)"
+    $report += ""
+    
+    # Rest of the report function remains the same
+    # ...
+}
+```
+
+### Implementation Benefits
+
+The enhanced location tracking provides several important benefits:
+
+1. **Precise Location Information**:
+   - Building and room number data helps IT staff locate issues accurately
+   - Enables faster response times for on-site troubleshooting
+   - Facilitates better tracking of problem areas
+
+2. **Pattern Recognition**:
+   - Allows correlation of WiFi issues with specific buildings or locations
+   - Helps identify potential infrastructure problems (e.g., interference sources, dead zones)
+   - Enables data-driven decisions about access point placement and upgrades
+
+3. **User Experience**:
+   - Streamlined support process for users reporting WiFi issues
+   - Eliminates need for follow-up questions about location
+   - Provides consistent format for location reporting
+
+4. **Report Enhancement**:
+   - More complete documentation for IT knowledge base
+   - Better historical tracking of WiFi issues by location
+   - Improved metrics for measuring WiFi performance across campus
+
+## 📄 Report Generation
+
+### Export-Report Function (Continuing from above)
+
+```powershell
+function Export-Report($networks, $mac, $recommendedChannels, $computerName, $ipAddress, $userInfo, $connectedSSID, $connectedBSSID, $speedTest, $congestionData) {
+    # Determine report file path
+    $desktop = [Environment]::GetFolderPath("Desktop")
+    $filePath = Join-Path $desktop "WiFi_Analysis_Report.txt"
+    $report = @()
+
+    # Build the report content in sections
+    $report += "Wi-Fi Analysis Report"
+    $report += ("=" * 25)
+    
+    # User information section - UPDATED to include Building and Room Number
+    $report += "Submitted By:"
+    $report += "Name         : $($userInfo.Name)"
+    $report += "ID Number    : $($userInfo.ID)"
+    $report += "Email        : $($userInfo.Email)"
+    $report += "Telephone    : $($userInfo.Phone)"
+    $report += "Building     : $($userInfo.Building)"
+    $report += "Room Number  : $($userInfo.RoomNumber)"
     $report += ""
     
     # System information section
@@ -741,166 +796,3 @@ $scanButton.Add_Click({
     # Enable export button now that data is available
     $exportButton.Enabled = $script:networks.Count -gt 0
 })
-```
-
-This event handler:
-- Serves as the main entry point for application functionality
-- Orchestrates data collection, analysis, and display
-- Uses script-level variables for storing data
-- Manages rich text formatting with fonts and colors
-- Handles the entire process from scanning to display
-
-### Export Button Click Handler
-
-```powershell
-$exportButton.Add_Click({
-    # Verify data is available
-    if ($script:networks.Count -gt 0) {
-        # Get user information through form
-        $userInfo = Show-ExportInfoForm
-        
-        # If form wasn't canceled
-        if ($userInfo) {
-            # Call export function with all collected data
-            Export-Report -networks $script:networks -mac $script:mac `
-                -recommendedChannels $script:recommended `
-                -computerName $script:computerName -ipAddress $script:ipAddress `
-                -userInfo $userInfo -connectedSSID $script:connectedSSID -connectedBSSID $script:connectedBSSID `
-                -speedTest $script:speedTest -congestionData $script:congestionData
-        }
-    } else {
-        # Show error if no data is available
-        [System.Windows.Forms.MessageBox]::Show("Nothing to export. Please run a scan first.", "Export Error")
-    }
-})
-```
-
-This handler:
-- Ensures data is available before attempting export
-- Collects user information through a modal form
-- Passes all collected data to the export function
-- Provides appropriate error handling
-
-## ⚙️ Advanced Implementation Details
-
-### String Formatting for Tables
-
-```powershell
-# Format string with specific column widths
-$outputBox.AppendText(("{0,-35} {1,-10} {2,-10} {3,-15} {4,-10} {5,-10} {6,-15}`r`n" -f 
-    "SSID", "Signal(%)", "Channel", "Security", "Quality", "Band", "Width"))
-```
-
-Format specifier breakdown:
-- `{0,-35}`: First parameter, left-aligned, 35 characters wide
-- Negative value indicates left alignment (positive would be right alignment)
-- The `-f` operator substitutes parameters into the placeholders
-
-### RichTextBox Color Formatting
-
-```powershell
-# Set text color for a specific portion
-$outputBox.SelectionStart = $outputBox.TextLength
-$outputBox.SelectionLength = 0
-$outputBox.SelectionColor = $signalColor
-$outputBox.AppendText(("{0,-10} " -f $net.Signal))
-```
-
-This technique:
-1. Sets the insertion point to the current end of text
-2. Sets selection length to zero (affects only new text)
-3. Sets the color property for that selection
-4. Appends text, which inherits the selection properties
-
-### Script-Level Variables
-
-```powershell
-# Initialize script-level variables
-$script:networks = @()
-$script:mac = ""
-$script:recommended = @{}
-$script:computerName = ""
-$script:ipAddress = ""
-$script:connectedSSID = ""
-$script:connectedBSSID = ""
-$script:congestionData = @{}
-$script:speedTest = @{
-    DownloadSpeed = 0
-    Latency = 0
-    Status = "Not Run"
-    Details = ""
-}
-```
-
-Benefits of script-level variables:
-- Accessible throughout the script, including inside functions
-- Persistent between function calls
-- Allow data to be collected in one function and used in another
-- Enable event handlers to share state
-
-### Dynamic Form Controls
-
-```powershell
-# Dynamically create form controls in a loop
-for ($i = 0; $i -lt $labels.Count; $i++) {
-    # Create and position label
-    $label = New-Object System.Windows.Forms.Label
-    $label.Text = $labels[$i]
-    $label.Location = New-Object System.Drawing.Point -ArgumentList 20, (30 + ($i * 40))
-    $form.Controls.Add($label)
-    
-    # Create and position textbox
-    $textbox = New-Object System.Windows.Forms.TextBox
-    $textbox.Location = New-Object System.Drawing.Point -ArgumentList 150, (30 + ($i * 40))
-    $form.Controls.Add($textbox)
-    $textboxes += $textbox
-}
-```
-
-This approach:
-- Reduces code duplication
-- Makes the form layout easy to modify
-- Allows for a variable number of fields
-- Stores references to created controls for later access
-
-### Channel Congestion Formula
-
-```powershell
-# Calculate signal impact based on distance from center channel
-$distance = [Math]::Abs($i - $channel)
-$impact = $signal * (1 - ($distance / 5))
-```
-
-The congestion formula:
-1. Calculates absolute distance between channels
-2. Creates a linear diminishing factor (1 - distance/5)
-3. Multiplies by signal strength to weight stronger signals more heavily
-4. Results in higher impact on the center channel, decreasing with distance
-
-### Error Handling in Speed Test
-
-```powershell
-# Multiple fallback servers with graceful degradation
-foreach ($server in $pingServers) {
-    try {
-        # Try to ping this server
-        $ping = Test-Connection -ComputerName $server -Count 2 -ErrorAction Stop
-        # Success - capture result and exit loop
-        $avgLatency = ($ping | Measure-Object -Property ResponseTime -Average).Average
-        $testResults.Latency = [math]::Round($avgLatency, 0)
-        $pingSuccess = $true
-        break
-    }
-    catch {
-        # Record failure and continue to next server
-        $testResults.Details += "Failed to ping $server. "
-        continue
-    }
-}
-```
-
-This pattern provides:
-- Robust error handling with multiple fallback options
-- Detailed error tracking for diagnostics
-- Graceful degradation of functionality
-- Ability to continue partial testing even if some components fail
