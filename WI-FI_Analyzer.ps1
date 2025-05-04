@@ -297,7 +297,8 @@ function Test-NetworkSpeed {
     }
     
     try {
-        # Try specified DNS servers for the ping test
+        # Try specified DNS servers for the ping test "167.206.19.3", "216.244.115.147"
+        #failover ip's since we block external DNS which can be changed for a different Org.
         $pingServers = @("8.8.8.8", "167.206.19.3", "216.244.115.147")
         $pingSuccess = $false
         $successServer = ""
