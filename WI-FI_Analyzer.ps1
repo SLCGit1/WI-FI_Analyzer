@@ -297,8 +297,7 @@ function Test-NetworkSpeed {
     }
     
     try {
-        # Try specified DNS servers for the ping test "167.206.19.3", "216.244.115.147"
-        #failover ip's since we block external DNS which can be changed for a different Org.
+        # Try specified DNS servers for the ping test
         $pingServers = @("8.8.8.8", "167.206.19.3", "216.244.115.147")
         $pingSuccess = $false
         $successServer = ""
@@ -393,11 +392,11 @@ function Show-ExportInfoForm {
     # Create a new form
     $form = New-Object System.Windows.Forms.Form
     $form.Text = "Export Info"
-    $form.Size = New-Object System.Drawing.Size(400, 280)  # Increased size
+    $form.Size = New-Object System.Drawing.Size(400, 360)  # Increased size to accommodate new fields
     $form.StartPosition = "CenterScreen"  # Center the form on screen
 
     # Labels for the form fields
-    $labels = @("Your Name:", "ID Number:", "Email Address:", "Telephone Number:")
+    $labels = @("Your Name:", "ID Number:", "Email Address:", "Telephone Number:", "Building:", "Room Number:")
     $textboxes = @()  # Array to store textbox references
 
     # Create label and textbox for each field
@@ -420,7 +419,7 @@ function Show-ExportInfoForm {
     # Create OK button for form submission
     $okButton = New-Object System.Windows.Forms.Button
     $okButton.Text = "OK"
-    $okButton.Location = New-Object System.Drawing.Point -ArgumentList 150, 190  # Positioned below fields
+    $okButton.Location = New-Object System.Drawing.Point -ArgumentList 150, 270  # Positioned below fields
     $okButton.Size = New-Object System.Drawing.Size(100, 30)  # Larger button
     $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK  # Set dialog result when clicked
     $form.AcceptButton = $okButton  # Make this button the default (triggered by Enter key)
@@ -434,6 +433,8 @@ function Show-ExportInfoForm {
             ID = $textboxes[1].Text
             Email = $textboxes[2].Text
             Phone = $textboxes[3].Text
+            Building = $textboxes[4].Text
+            RoomNumber = $textboxes[5].Text
         }
     } else {
         # If dialog was canceled or closed, return null
@@ -454,10 +455,12 @@ function Export-Report($networks, $mac, $recommendedChannels, $computerName, $ip
     
     # User information section
     $report += "Submitted By:"
-    $report += "Name       : $($userInfo.Name)"
-    $report += "ID Number  : $($userInfo.ID)"
-    $report += "Email      : $($userInfo.Email)"
-    $report += "Telephone  : $($userInfo.Phone)"
+    $report += "Name         : $($userInfo.Name)"
+    $report += "ID Number    : $($userInfo.ID)"
+    $report += "Email        : $($userInfo.Email)"
+    $report += "Telephone    : $($userInfo.Phone)"
+    $report += "Building     : $($userInfo.Building)"
+    $report += "Room Number  : $($userInfo.RoomNumber)"
     $report += ""
     
     # System information section
@@ -693,7 +696,7 @@ $scanButton.Add_Click({
     $outputBox.AppendText(("{0,-35} {1,-10} {2,-10} {3,-15} {4,-10} {5,-10} {6,-15}`r`n" -f "SSID", "Signal(%)", "Channel", "Security", "Quality", "Band", "Width"))
     $outputBox.AppendText(("".PadRight(115, "-")) + "`r`n")  # Separator line
     $outputBox.SelectionFont = New-Object System.Drawing.Font("Consolas", 10)
-
+    
     # Display each network
     foreach ($net in $script:networks) {
         # Mark the currently connected network with [*]
@@ -752,7 +755,7 @@ $scanButton.Add_Click({
         $outputBox.SelectionColor = "Black"
         $outputBox.AppendText(("{0,-15}`r`n" -f $net.Width))
     }
-
+    
     # Display channel congestion analysis
     $outputBox.SelectionStart = $outputBox.TextLength
     $outputBox.SelectionLength = 0
