@@ -9,7 +9,7 @@ Key functionality includes:
 - **Signal Analysis**: It categorizes signal strength into clear quality levels (Strong, Medium, Weak) with visual color-coding for instant assessment.
 - **Security Assessment**: The code identifies security protocols (WPA3, WPA2, WPA, Open) and highlights potential security vulnerabilities with color-coded warnings.
 - **Channel Congestion Analysis**: A sophisticated algorithm models how WiFi signals overlap and interfere with each other, calculating congestion scores for each channel.
-- **Performance Testing**: The code performs network speed tests, measuring both download throughput and latency.
+- **Performance Testing**: The code performs network speed tests, measuring both download throughput and latency Line 302 has an option for failed over DNS, for Org that block public DNS.
 - **Report Generation**: Compiles all findings into a comprehensive report that can be saved and shared.
 
 The application presents this information through a user-friendly graphical interface using Windows Forms technology, with color coding and clear visual indicators to help users understand their WiFi environment at a glance.
