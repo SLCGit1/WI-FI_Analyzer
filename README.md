@@ -15,6 +15,11 @@ Key functionality includes:
 
 The application presents this information through a user-friendly graphical interface using Windows Forms technology, with color coding and clear visual indicators to help users understand their WiFi environment at a glance.
 
+![wifi1](https://github.com/user-attachments/assets/f1e9eba8-9087-4411-aa4b-8e672eb23822)
+![wifi2](https://github.com/user-attachments/assets/f90098e1-bbaf-443e-9de7-697fe785b6c3)
+![wifi3](https://github.com/user-attachments/assets/a30b5e76-081a-45d7-81e6-37f0d41f87cf)
+![wifi4](https://github.com/user-attachments/assets/25856725-87b1-46c3-9de9-ac90bfd31a2f)
+
 ## 📑 Table of Contents
 
 - [🖥️ GUI Components](#-gui-components)
