@@ -801,3 +801,6 @@ $scanButton.Add_Click({
     # Enable export button now that data is available
     $exportButton.Enabled = $script:networks.Count -gt 0
 })
+```
+## Author
+Created by Jesus Ayala from Sarah Lawrence College
