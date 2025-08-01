@@ -28,20 +28,20 @@ The application presents this information through a user-friendly graphical inte
 
 ### Default Usage (Interactive)
 ```powershell
-.\WiFiAnalyzer.ps1
+.\WiFiAnalyzerNew.ps1
 ```
 Shows startup choice dialog - perfect for mixed-skill environments
 
 ### Advanced Usage
 ```powershell
 # For experienced users - skip all setup checks
-.\WiFiAnalyzer.ps1 -QuickStart
+.\WiFiAnalyzerNew.ps1 -QuickStart
 
 # For troubleshooting - enable detailed output
-.\WiFiAnalyzer.ps1 -Debug
+.\WiFiAnalyzerNew.ps1 -Debug
 
 # Show all available options
-.\WiFiAnalyzer.ps1 -help
+.\WiFiAnalyzerNew.ps1 -help
 ```
 
 ## 📑 Table of Contents
@@ -711,19 +711,19 @@ This WiFi Analyzer is specifically designed for educational institutions like Sa
 
 ```powershell
 # Interactive mode (recommended for mixed environments)
-.\WiFiAnalyzer.ps1
+.\WiFiAnalyzerNew.ps1
 
 # Quick start for IT professionals
-.\WiFiAnalyzer.ps1 -QuickStart
+.\WiFiAnalyzerNew.ps1 -QuickStart
 
 # Debug mode for troubleshooting
-.\WiFiAnalyzer.ps1 -Debug
+.\WiFiAnalyzerNew.ps1 -Debug
 
 # Show all available options
-.\WiFiAnalyzer.ps1 -help
+.\WiFiAnalyzerNew.ps1 -help
 
 # Alternative quick start syntax
-.\WiFiAnalyzer.ps1 -SkipPreflightCheck
+.\WiFiAnalyzerNew.ps1 -SkipPreflightCheck
 ```
 
 ### Deployment Scenarios
@@ -736,7 +736,7 @@ This WiFi Analyzer is specifically designed for educational institutions like Sa
 #### **Help Desk Usage**
 ```powershell
 # Quick diagnostic scan
-.\WiFiAnalyzer.ps1 -QuickStart -Debug
+.\WiFiAnalyzerNew.ps1 -QuickStart -Debug
 ```
 
 #### **Student Support**
