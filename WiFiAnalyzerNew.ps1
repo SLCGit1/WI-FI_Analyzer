@@ -1,5 +1,5 @@
 # WiFi Analyzer Script - Complete Fixed Version with Hybrid Startup
-# Created by Jesus Ayala - Sarah Lawrence College
+# Created by Jesus Ayala
 # Enhanced with guided setup, quick start, and robust error handling
 
 param(
