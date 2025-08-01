@@ -1,27 +1,52 @@
-# 💻 WiFi Analyzer - Technical Breakdown
+# 💻 WiFi Analyzer - Hybrid Startup Edition
 
 ## What This Code Does
 
-This PowerShell script creates a comprehensive WiFi analyzer application that helps users diagnose wireless network issues and optimize performance. The application scans for all nearby WiFi networks, analyzes their signal strength, security settings, and channel usage, and provides detailed recommendations to improve connectivity.
+This PowerShell script creates a comprehensive WiFi analyzer application with intelligent hybrid startup capabilities that helps users diagnose wireless network issues and optimize performance. The application features both guided setup for beginners and quick start for experienced users, automatically handles system requirements, and provides detailed network analysis.
 
 Key functionality includes:
-- **Network Discovery**: The code utilizes Windows' `netsh` command to detect and parse information about all accessible WiFi networks in the vicinity.
-- **Signal Analysis**: It categorizes signal strength into clear quality levels (Strong, Medium, Weak) with visual color-coding for instant assessment.
-- **Security Assessment**: The code identifies security protocols (WPA3, WPA2, WPA, Open) and highlights potential security vulnerabilities with color-coded warnings.
-- **Channel Congestion Analysis**: A sophisticated algorithm models how WiFi signals overlap and interfere with each other, calculating congestion scores for each channel.
-- **Performance Testing**: The code performs network speed tests, measuring both download throughput and latency Line 302 has an option for failed over DNS, for Org that block public DNS.
-- **Report Generation**: Compiles all findings into a comprehensive report that can be saved and shared.
-- **Location Tracking**: Enhanced with Building and Room Number fields to help IT support locate and address WiFi issues more efficiently.
+- **Hybrid Startup System**: Intelligent choice between Guided Setup (with system requirement checking) and Quick Start (for experienced users)
+- **Automated Requirement Detection**: Checks location services, WiFi adapters, and provides step-by-step guidance to fix issues
+- **Network Discovery**: Utilizes Windows' `netsh` command to detect and parse information about all accessible WiFi networks in the vicinity
+- **Signal Analysis**: Categorizes signal strength into clear quality levels (Strong, Medium, Weak) with visual color-coding for instant assessment
+- **Security Assessment**: Identifies security protocols (WPA3, WPA2, WPA, Open) and highlights potential security vulnerabilities with color-coded warnings
+- **Channel Congestion Analysis**: A sophisticated algorithm models how WiFi signals overlap and interfere with each other, calculating congestion scores for each channel
+- **Performance Testing**: Performs reliable network speed tests, measuring both download throughput and latency with multiple fallback servers
+- **Report Generation**: Compiles all findings into comprehensive reports that can be saved and shared
+- **Location Tracking**: Enhanced with Building and Room Number fields to help IT support locate and address WiFi issues more efficiently
+- **Preference Memory**: Remembers user startup preference for future launches
+- **Command Line Support**: Advanced users can bypass dialogs with `-QuickStart`, `-Debug`, and other parameters
 
 The application presents this information through a user-friendly graphical interface using Windows Forms technology, with color coding and clear visual indicators to help users understand their WiFi environment at a glance.
 
 ![wifi1](https://github.com/user-attachments/assets/f1e9eba8-9087-4411-aa4b-8e672eb23822)
 ![wifi2](https://github.com/user-attachments/assets/f90098e1-bbaf-443e-9de7-697fe785b6c3)
-![wifi3](https://github.com/user-attachments/assets/a30b5e76-081a-45d7-81e6-37f0d41f87cf)
+![wifi3](https://github.com/user-attachments/assets/25856725-87b1-46c3-9de9-ac90bfd31a2f)
 ![wifi4](https://github.com/user-attachments/assets/25856725-87b1-46c3-9de9-ac90bfd31a2f)
+
+## 🚀 Quick Start Guide
+
+### Default Usage (Interactive)
+```powershell
+.\WiFiAnalyzer.ps1
+```
+Shows startup choice dialog - perfect for mixed-skill environments
+
+### Advanced Usage
+```powershell
+# For experienced users - skip all setup checks
+.\WiFiAnalyzer.ps1 -QuickStart
+
+# For troubleshooting - enable detailed output
+.\WiFiAnalyzer.ps1 -Debug
+
+# Show all available options
+.\WiFiAnalyzer.ps1 -help
+```
 
 ## 📑 Table of Contents
 
+- [🎯 Hybrid Startup System](#-hybrid-startup-system)
 - [🖥️ GUI Components](#-gui-components)
 - [📡 Network Scanning](#-network-scanning)
 - [🔍 System Information](#-system-information)
@@ -32,6 +57,62 @@ The application presents this information through a user-friendly graphical inte
 - [🔄 Event Handlers](#-event-handlers)
 - [⚙️ Advanced Implementation Details](#-advanced-implementation-details)
 - [🏢 Location Tracking Enhancement](#-location-tracking-enhancement)
+- [🎓 Educational Environment Features](#-educational-environment-features)
+
+## 🎯 Hybrid Startup System
+
+### Intelligent User Experience
+
+The WiFi Analyzer now features a sophisticated startup system that adapts to different user skill levels:
+
+#### Startup Choice Dialog
+```powershell
+function Show-StartupChoiceDialog {
+    # Creates user-friendly dialog with two clear options:
+    # [G] Guided Setup (Recommended) - Full system validation
+    # [Q] Quick Start - Direct to scanning for experts
+    # Plus "Remember my choice" checkbox for future launches
+}
+```
+
+#### Guided Setup Mode
+- **Target Users**: Students, first-time users, troubleshooting scenarios
+- **Features**:
+  - Comprehensive system requirements checking
+  - Automatic detection of location service issues
+  - Step-by-step guidance to fix problems
+  - Attempts to open Windows Settings automatically
+  - Provides manual instructions if auto-fix fails
+  - Only proceeds when system is ready
+
+#### Quick Start Mode  
+- **Target Users**: IT professionals, experienced users
+- **Features**:
+  - Basic validation with warning dialogs
+  - Option to continue despite issues
+  - Direct path to WiFi scanning
+  - Minimal user interaction
+
+#### Preference Management
+```powershell
+function Save-UserPreference($preference) {
+    # Saves user choice to: $env:APPDATA\WiFiAnalyzer_Preference.txt
+    # Eliminates need to choose on subsequent launches
+}
+```
+
+### System Requirements Detection
+
+```powershell
+function Test-Prerequisites {
+    # Comprehensive system validation:
+    # ✅ Location Services - Required for WiFi scanning
+    # ✅ WiFi Adapter - Active wireless network adapter  
+    # ✅ Admin Rights - Enhanced permissions (optional but recommended)
+    
+    # Returns detailed status with specific issue identification
+}
+```
 
 ## 🖥️ GUI Components
 
@@ -361,7 +442,7 @@ This function:
 
 ## ⚡ Speed Testing
 
-### Test-NetworkSpeed Function
+### Enhanced Test-NetworkSpeed Function
 
 ```powershell
 function Test-NetworkSpeed {
@@ -437,7 +518,7 @@ function Test-NetworkSpeed {
         }
         
         if (-not $downloadSuccess) {
-            $testResults.Status = "Partial: Latency test successful, but all download tests failed."
+            $testResults.Status = "Partial: Latency test successful, but all download tests failed. Network may be restricted."
         }
         
         return $testResults
@@ -468,6 +549,7 @@ The function employs multiple techniques to ensure reliable testing:
    - Multiple servers for latency testing
    - Multiple URLs for download testing
    - Continues even if latency test succeeds but download fails
+   - Designed for educational network restrictions
 
 4. **Error Handling**:
    - Comprehensive try/catch blocks
@@ -577,34 +659,6 @@ function Show-ExportInfoForm {
 }
 ```
 
-### Enhanced Report Generation
-
-```powershell
-function Export-Report($networks, $mac, $recommendedChannels, $computerName, $ipAddress, $userInfo, $connectedSSID, $connectedBSSID, $speedTest, $congestionData) {
-    # Determine report file path
-    $desktop = [Environment]::GetFolderPath("Desktop")
-    $filePath = Join-Path $desktop "WiFi_Analysis_Report.txt"
-    $report = @()
-
-    # Build the report content in sections
-    $report += "Wi-Fi Analysis Report"
-    $report += ("=" * 25)
-    
-    # User information section - UPDATED to include Building and Room Number
-    $report += "Submitted By:"
-    $report += "Name         : $($userInfo.Name)"
-    $report += "ID Number    : $($userInfo.ID)"
-    $report += "Email        : $($userInfo.Email)"
-    $report += "Telephone    : $($userInfo.Phone)"
-    $report += "Building     : $($userInfo.Building)"
-    $report += "Room Number  : $($userInfo.RoomNumber)"
-    $report += ""
-    
-    # Rest of the report function remains the same
-    # ...
-}
-```
-
 ### Implementation Benefits
 
 The enhanced location tracking provides several important benefits:
@@ -629,178 +683,119 @@ The enhanced location tracking provides several important benefits:
    - Better historical tracking of WiFi issues by location
    - Improved metrics for measuring WiFi performance across campus
 
+## 🎓 Educational Environment Features
+
+### Perfect for Academic Settings
+
+This WiFi Analyzer is specifically designed for educational institutions like Sarah Lawrence College:
+
+#### **For Students**
+- **Guided Setup**: Step-by-step assistance for first-time users
+- **Clear Visual Feedback**: Color-coded results are easy to understand
+- **Educational Value**: Teaches about WiFi technology and network concepts
+- **No Technical Knowledge Required**: Automated problem detection and guidance
+
+#### **For IT Support Staff**
+- **Quick Start Mode**: Bypass setup checks for efficient troubleshooting  
+- **Comprehensive Reports**: Detailed logs with user location information
+- **Debug Mode**: Advanced diagnostics for complex issues
+- **Command Line Options**: Automation and scripting capabilities
+
+#### **For Administrators**
+- **Preference Management**: Configure default behaviors across systems
+- **Location Tracking**: Building and room number integration
+- **Batch Deployment**: Silent installation with predefined settings
+- **Educational Compliance**: Designed for academic network restrictions
+
+### Command Line Reference
+
+```powershell
+# Interactive mode (recommended for mixed environments)
+.\WiFiAnalyzer.ps1
+
+# Quick start for IT professionals
+.\WiFiAnalyzer.ps1 -QuickStart
+
+# Debug mode for troubleshooting
+.\WiFiAnalyzer.ps1 -Debug
+
+# Show all available options
+.\WiFiAnalyzer.ps1 -help
+
+# Alternative quick start syntax
+.\WiFiAnalyzer.ps1 -SkipPreflightCheck
+```
+
+### Deployment Scenarios
+
+#### **Lab Computer Setup**
+1. Run once with desired mode
+2. Check "Remember my choice"
+3. Future users get automatic startup
+
+#### **Help Desk Usage**
+```powershell
+# Quick diagnostic scan
+.\WiFiAnalyzer.ps1 -QuickStart -Debug
+```
+
+#### **Student Support**
+- Students use default interactive mode
+- Guided setup teaches them about system requirements
+- Reports include location data for follow-up support
+
 ## 📄 Report Generation
 
-### Export-Report Function (Continuing from above)
+### Comprehensive Export Functionality
 
 ```powershell
 function Export-Report($networks, $mac, $recommendedChannels, $computerName, $ipAddress, $userInfo, $connectedSSID, $connectedBSSID, $speedTest, $congestionData) {
-    # Determine report file path
-    $desktop = [Environment]::GetFolderPath("Desktop")
-    $filePath = Join-Path $desktop "WiFi_Analysis_Report.txt"
-    $report = @()
-
-    # Build the report content in sections
-    $report += "Wi-Fi Analysis Report"
-    $report += ("=" * 25)
-    
-    # User information section - UPDATED to include Building and Room Number
-    $report += "Submitted By:"
-    $report += "Name         : $($userInfo.Name)"
-    $report += "ID Number    : $($userInfo.ID)"
-    $report += "Email        : $($userInfo.Email)"
-    $report += "Telephone    : $($userInfo.Phone)"
-    $report += "Building     : $($userInfo.Building)"
-    $report += "Room Number  : $($userInfo.RoomNumber)"
-    $report += ""
-    
-    # System information section
-    $report += "System Info:"
-    $report += "Computer Name      : $computerName"
-    $report += "Computer IP        : $ipAddress"
-    $report += "Wi-Fi MAC Address  : $mac"
-    $report += "Connected SSID     : $connectedSSID ($connectedBSSID)"
-    $report += ""
-    
-    # Speed test results
-    $report += "Network Performance:"
-    if ($speedTest.Status -eq "Success") {
-        $report += "Download Speed    : $($speedTest.DownloadSpeed) Mbps"
-        $report += "Latency           : $($speedTest.Latency) ms"
-    } else {
-        $report += "Speed Test        : $($speedTest.Status)"
-    }
-    $report += ""
-    
-    # Network list section
-    $report += "Nearby Networks:"
-    $report += ""
-    $report += ("{0,-35} {1,-10} {2,-10} {3,-15} {4,-10} {5,-10} {6,-15}" -f "SSID", "Signal(%)", "Channel", "Security", "Quality", "Band", "Width")
-    $report += ("-" * 105)
-    
-    # Add each network to the report
-    foreach ($net in $networks) {
-        $ssidLabel = if ($net.SSID -eq $connectedSSID -and $net.BSSID -eq $connectedBSSID) { 
-            "[*] $($net.SSID)" 
-        } else { 
-            $net.SSID 
-        }
-        
-        $signalQuality, $_ = Get-SignalColor $net.Signal
-        
-        $report += ("{0,-35} {1,-10} {2,-10} {3,-15} {4,-10} {5,-10} {6,-15}" -f $ssidLabel, $net.Signal, $net.Channel, $net.Security, $signalQuality, $net.Band, $net.Width)
-    }
-    
-    # Channel congestion analysis section
-    $report += ""
-    $report += "Channel Congestion Analysis:"
-    
-    # 2.4 GHz channels
-    $report += "2.4 GHz Band:"
-    $congestion24 = $congestionData.GetEnumerator() | Where-Object { $_.Name -le 14 } | Sort-Object Name
-    foreach ($channel in $congestion24) {
-        $congestionLevel = if ($channel.Value -gt 150) { "High" } elseif ($channel.Value -gt 75) { "Medium" } else { "Low" }
-        $report += "  Channel $($channel.Name): $congestionLevel congestion (Score: $([math]::Round($channel.Value, 1)))"
-    }
-    
-    # 5 GHz channels
-    $report += ""
-    $report += "5 GHz Band:"
-    $congestion5 = $congestionData.GetEnumerator() | Where-Object { $_.Name -gt 14 } | Sort-Object Name
-    foreach ($channel in $congestion5) {
-        $congestionLevel = if ($channel.Value -gt 150) { "High" } elseif ($channel.Value -gt 75) { "Medium" } else { "Low" }
-        $report += "  Channel $($channel.Name): $congestionLevel congestion (Score: $([math]::Round($channel.Value, 1)))"
-    }
-    
-    # Recommendations and legends
-    $report += ""
-    $report += "Recommended Channels:"
-    $report += "2.4 GHz Band: Channel $($recommendedChannels['2.4GHz'])"
-    $report += "5 GHz Band  : Channel $($recommendedChannels['5GHz'])"
-    $report += ""
-    $report += "Signal Strength Legend:"
-    $report += "Strong: 70-100% | Medium: 40-69% | Weak: 0-39%"
-    $report += ""
-    $report += "Security Type Legend:"
-    $report += "WPA3: Most Secure | WPA2: Secure | WPA: Less Secure | Open: Not Secure"
-    
-    # Write to file and notify user
-    $report | Set-Content -Path $filePath -Encoding UTF8
-    [System.Windows.Forms.MessageBox]::Show("Report exported to Desktop", "Done")
+    # Creates detailed text reports including:
+    # - User information with location details
+    # - System configuration and network settings
+    # - Complete network analysis with recommendations
+    # - Channel congestion analysis with optimization suggestions
+    # - Speed test results and connectivity metrics
+    # - Visual legends for easy interpretation
 }
 ```
 
-This function:
-- Builds a structured report from all collected data
-- Uses formatted string tables for data presentation
-- Includes congestion analysis with easy-to-understand labels
-- Adds legends for interpreting signal and security data
-- Saves the report to the user's desktop
-- Notifies the user upon successful export
+Reports are automatically saved to the desktop as `WiFi_Analysis_Report.txt` and include:
+- **User Details**: Name, ID, contact information, building/room location
+- **System Information**: Computer name, IP address, MAC address, connected network
+- **Network Analysis**: All detected networks with signal strength, security, and channel data
+- **Performance Metrics**: Speed test results and latency measurements
+- **Optimization Recommendations**: Best channels for both 2.4GHz and 5GHz bands
+- **Technical Details**: Channel congestion scores and interference analysis
 
-## 🔄 Event Handlers
+## ⚙️ Advanced Implementation Details
 
-### Scan Button Click Handler
+### Error Handling and Reliability
 
-```powershell
-$scanButton.Add_Click({
-    # Show initial scanning message
-    $outputBox.Text = "Scanning WiFi networks and analyzing environment..."
-    
-    # Collect all required information
-    $extras = Get-ComputerInfoExtras
-    $script:computerName = $extras.ComputerName
-    $script:ipAddress = $extras.IPAddress
-    $script:networks = Get-WiFiScan
-    $script:mac = Get-MACAddress
-    $ssidInfo = Get-ConnectedSSID
-    $script:connectedSSID = $ssidInfo.SSID
-    $script:connectedBSSID = $ssidInfo.BSSID
-    
-    # Analyze channel congestion
-    $recommendationData = Recommend-BestChannel $script:networks
-    $script:recommended = @{
-        "2.4GHz" = $recommendationData["2.4GHz"]
-        "5GHz" = $recommendationData["5GHz"]
-    }
-    $script:congestionData = $recommendationData["CongestionData"]
-    
-    # Clear and begin formatting output
-    $outputBox.Clear()
-    
-    # Display system information with rich formatting
-    # ...formatted output code...
-    
-    # Run speed test and display results
-    $outputBox.AppendText("Running network speed test... Please wait...`r`n")
-    $script:speedTest = Test-NetworkSpeed
-    
-    # Format speed test results based on status
-    if ($script:speedTest.Status -eq "Success") {
-        # Display successful speed test results
-    } 
-    elseif ($script:speedTest.Status -match "Partial") {
-        # Display partial results with warning color
-    }
-    else {
-        # Display failed test with error color
-    }
-    
-    # Display network table with color-coded information
-    # ...formatted output code...
-    
-    # Display congestion analysis with color-coded levels
-    # ...formatted output code...
-    
-    # Display channel recommendations
-    # ...formatted output code...
-    
-    # Add legends for signal strength and security
-    # ...formatted output code...
-    
-    # Enable export button now that data is available
-    $exportButton.Enabled = $script:networks.Count -gt 0
-})
-```
+The application includes comprehensive error handling:
+- **Graceful Degradation**: Partial functionality when some features fail
+- **Multiple Fallbacks**: Alternative methods for critical operations
+- **User-Friendly Messages**: Clear explanations instead of technical errors
+- **Debug Information**: Detailed diagnostics when needed
+
+### Performance Optimizations
+
+- **Efficient Parsing**: Optimized regex patterns for network data extraction
+- **Memory Management**: Proper cleanup of temporary files and objects
+- **UI Responsiveness**: Non-blocking operations with progress feedback
+- **Resource Conservation**: Minimal system impact during scanning
+
+### Security Considerations
+
+- **No Credential Storage**: Never stores or transmits sensitive information
+- **Local Operation**: All processing happens on the local machine
+- **Temporary File Cleanup**: Automatic removal of speed test files
+- **Permission Awareness**: Graceful handling of insufficient privileges
+
 ## Author
+
 Created by Jesus Ayala from Sarah Lawrence College
+
+---
+
+*This enhanced WiFi Analyzer represents a significant evolution from a simple diagnostic tool to a comprehensive network analysis platform designed specifically for educational environments. The hybrid startup system ensures that users of all skill levels can effectively use the tool while maintaining the advanced capabilities that IT professionals require.*
